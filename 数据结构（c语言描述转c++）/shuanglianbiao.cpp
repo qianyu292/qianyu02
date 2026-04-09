@@ -5,7 +5,6 @@ struct Node
     Node* next; 
     Node* prev;  // 新增前驱指针
 };
-
 template<typename E>
 class List
 {
@@ -256,5 +255,20 @@ public:
             step++;
         }
         return step;
+    }
+    //交换链表中的两个相邻指针
+    void swap(Node<E>* L, Node<E>* R)
+    {
+        if (!L || !R || L == R) return L;
+        Node<E>* temp = L->prev;
+        Node<E>* temp2 = R->next;
+        temp->next = R;
+        R->prev = temp;
+
+        R->next = L;
+        L->prev = R;
+
+        L->next = temp2;
+        temp2->prev = L;
     }
 };

@@ -1,3 +1,4 @@
+//队列链表实现
 template<typename E>
 struct Node
 {

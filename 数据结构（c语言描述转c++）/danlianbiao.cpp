@@ -1,3 +1,4 @@
+#include<vector>
 template<typename E>
 struct Node
 {
@@ -89,5 +90,25 @@ public:
 	E Retrieve(Node<E>* P)
 	{
 		return P->val;
+	}
+	std::vector<E> PrintList()
+	{
+		std::vector<E>res;
+		Node<E>* p = Head->next;
+		while (p != nullptr)
+		{
+			res.push_back(p->val);
+			p = p->next;
+		}
+		return res;
+	}
+	void swap(Node<E>* L, Node<E>* R)
+	{
+		if (!L || !R || L == R)return;
+		Node<E>* temp = Findprevious(L);
+		Node<E>* temp2 = R->next;
+		temp->next = R;
+		R->next = L;
+		L->next = temp2;
 	}
 };

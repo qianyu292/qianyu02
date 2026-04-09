@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="danlianbiao.cpp" />
     <ClCompile Include="queue.cpp" />
+    <ClCompile Include="queue2.cpp" />
     <ClCompile Include="shuanglianbiao.cpp" />
     <ClCompile Include="stack.cpp" />
     <ClCompile Include="stack2.cpp" />
