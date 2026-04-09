@@ -21,5 +21,14 @@
     <ClCompile Include="shuanglianbiao.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="stack.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stack2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="queue.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
