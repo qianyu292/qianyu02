@@ -111,4 +111,19 @@ public:
 		R->next = L;
 		L->next = temp2;
 	}
+	void ReverseList(Node<E>* head)
+	{
+		Node<E>* pre = nullptr, cur = head, nxt = head->next;
+		while (cur != nullptr)
+		{
+			cur->next = pre;
+			pre = cur;
+			cur = nxt;
+			if (nxt->next != nullptr)
+			{
+				nxt = nxt->next;
+			}
+		}
+		return pre;
+	}
 };
