@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="danlianbiao(lazydelete).cpp" />
     <ClCompile Include="danlianbiao.cpp" />
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="queue2.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="shuanglianbiao.cpp" />
     <ClCompile Include="stack.cpp" />
     <ClCompile Include="stack2.cpp" />
+    <ClCompile Include="stackapply.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -36,5 +36,11 @@
     <ClCompile Include="self-adjusting List.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="danlianbiao(lazydelete).cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stackapply.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
