@@ -48,5 +48,11 @@
     <ClCompile Include="AvlTree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Hashmap.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HashMap2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

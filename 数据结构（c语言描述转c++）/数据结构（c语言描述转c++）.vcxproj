@@ -126,6 +126,8 @@
     <ClCompile Include="AvlTree.cpp" />
     <ClCompile Include="danlianbiao(lazydelete).cpp" />
     <ClCompile Include="danlianbiao.cpp" />
+    <ClCompile Include="Hashmap.cpp" />
+    <ClCompile Include="HashMap2.cpp" />
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="queue2.cpp" />
     <ClCompile Include="Searchtree.cpp" />
