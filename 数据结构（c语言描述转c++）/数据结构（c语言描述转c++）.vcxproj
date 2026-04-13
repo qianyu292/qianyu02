@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AvlTree.cpp" />
     <ClCompile Include="danlianbiao(lazydelete).cpp" />
     <ClCompile Include="danlianbiao.cpp" />
     <ClCompile Include="queue.cpp" />

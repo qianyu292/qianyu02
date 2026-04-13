@@ -1,4 +1,5 @@
 #include<vector>
+#include<queue>
 //¶þ²æÊ÷½Úµã
 template<typename E>
 struct TreeNode
@@ -169,5 +170,88 @@ public:
 	E Retrieve(TreeNode<E>* p)
 	{
 		return p->val;
+	}
+	int size(TreeNode<E>*root)
+	{
+		if (root == nullptr)
+		{
+			return 0;
+		}
+		return 1 + size(root->left) + size(root->right);
+	}
+	int countleaves(TreeNode<E>* root)
+	{
+		if (!root)return 0;
+		if (!root->left && !root->right)return 1;
+		return countleaves(root->left) + countleaves(root->right);
+	}
+	int countmannodes(TreeNode<E>* root)
+	{
+		if (!root)return 0;
+		int count = (root->left != nullptr && root->right != nullptr) ? 1 : 0;
+		return count + countmannodes(root->left) + countmannodes(root->right);
+	}
+	std::vector <std::vector<E>>levelorderbottom(TreeNode<E>* root)
+	{
+		std::vector<std::vector<E>>res;
+		if (root == nullptr)
+		{
+			return res;
+		}
+		std::queue<TreeNode<E>*>q;
+		q.push(root);
+		while (!q.empty())
+		{
+			int sz = q.size();
+			std::vector<E>track;
+			for (int i = 0; i < sz; ++i)
+			{
+				TreeNode<E>* cur = q.front(); q.pop();
+				track.push_back(cur->val);
+				if (cur->left != nullptr)
+				{
+					q.push(cur->left);
+				}
+				if (cur->right != nullptr)
+				{
+					q.push(cur->right);
+				}
+			}
+			res.push_back(track);
+		}
+		return res;
+	}
+	bool issame(TreeNode<E>* root1, TreeNode<E>* root2)
+	{
+		if (root1 == nullptr && root2 == nullptr)
+		{
+			return true;
+		}
+		if (root1 == nullptr || root2 == nullptr)
+		{
+			return false;
+		}
+		if (root1->val != root2->val)
+		{
+			return false;
+		}
+		return issame(root1->left, root2->left) && issame(root1->right, root2->right);
+	}
+	bool flipEquiv(TreeNode<E>* root1,TreeNode<E>*root2)
+	{
+		if (root1 == nullptr && root2 == nullptr)
+		{
+			return true;
+		}
+		if (root1 == nullptr || root2 == nullptr)
+		{
+			return false;
+		}
+		if (root1->val != root2->val)
+		{
+			return false;
+		}
+		return (flipEquiv(root1->left, root2->left) && flipEquiv(root1->right, root2->right))
+			|| (flipEquiv(root1->right, root2->left) && flipEquiv(root1->left, root2->right));
 	}
 };
