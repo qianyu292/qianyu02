@@ -63,5 +63,11 @@
     <ClCompile Include="BinomialQueue.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="union-find.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sort.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
