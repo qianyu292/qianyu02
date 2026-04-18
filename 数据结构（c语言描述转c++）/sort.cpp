@@ -44,7 +44,7 @@ void shellsort(std::vector<int>&nums, int n)
 	}
 }
 //希尔排序的插入排序方式(在某种增量序列下时间复杂度可以到达n的2分之3次方
-void shellsort(std::vector<int>& arr, int n)
+void shellsort2(std::vector<int>& arr, int n)
 {
 	for (int increment = n / 2; increment > 0; increment /= 2)
 	{
@@ -78,6 +78,77 @@ void Heapsort(std::vector<int>& nums, int n)
 	}
 	nums = res;
 }
-//归并排序：
-//快速排序：
+//归并排序:递归的将数组往下分，再合并（先排序数组前半部分，再排序数组后半部分）时间复杂度：nlogn
+void Merge(std::vector<int>& nums, int lo, int mid, int hi);
+void Mergesort(std::vector<int>&nums, int lo, int hi)
+{
+	if (lo >= hi)
+	{
+		return;
+	}
+	int mid = lo + (hi - lo) / 2;
+	Mergesort(nums, lo, mid);
+	Mergesort(nums, mid + 1, hi);
+	Merge(nums, lo, mid, hi);
+}
+void Merge(std::vector<int>& nums, int lo, int mid, int hi)
+{
+	std::vector<int>temp;
+	temp = nums;
+	int i = lo, j = mid + 1;
+	for (int p = lo; p < hi; ++p)
+	{
+		if (i >= mid)
+		{
+			nums[p] = temp[j++];
+		}
+		else if (j >= hi)
+		{
+			nums[p] = temp[i++];
+		}
+		else if (temp[i] < temp[j])
+		{
+			nums[p] = temp[i++];
+		}
+		else if (temp[i] >= temp[j])
+		{
+			nums[p] = temp[j++];
+		}
+	}
+}
+//快速排序：递归的分治过程：时间复杂度nlogn（已知最快的实践排序算法）
+int partition(std::vector<int>& nums, int lo, int hi);
+void quicksort(std::vector<int>& nums, int lo, int hi)
+{
+	if (lo >= hi)
+	{
+		return;
+	}
+	int p = partition(nums, lo, hi);
 
+	quicksort(nums, lo, p-1);
+
+	quicksort(nums, p + 1, hi);
+}
+int partition(std::vector<int>& nums, int lo, int hi)
+{
+	int pivot = nums[lo];
+	int i = lo+1, j = hi;
+	while (i < j)
+	{
+		while (i<=hi && nums[i]<pivot)
+		{
+			i++;
+		}
+		while (j > lo && nums[j] >= pivot)
+		{
+			j--;
+		}
+		if (i < j)
+		{
+			std::swap(nums[i], nums[j]);
+		}
+	}
+	std::swap(nums[lo], nums[j]);
+	return j;
+}
