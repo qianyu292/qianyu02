@@ -152,3 +152,72 @@ int partition(std::vector<int>& nums, int lo, int hi)
 	std::swap(nums[lo], nums[j]);
 	return j;
 }
+//归并排序的非递归实现
+void merge(std::vector<int>&arr, int lo, int mid ,int hi);
+void MergeSort(std::vector<int>& arr, int n)
+{
+	if (n <= 1)
+	{
+		return;
+	}
+	for (int size = 1; size < n; size *= 2)
+	{
+		for (int left = 0; left < n - size; left += 2 * size)
+		{
+			int mid = left + size - 1;
+			int right = std::min(left + 2 * size - 1, n - 1);
+			merge(arr, left,mid,right);
+		}
+	}
+}
+void merge(std::vector<int>& arr, int lo,int mid , int hi)
+{
+	std::vector<int>temp(hi - lo + 1);
+	int i = lo, j = mid + 1, k = 0;
+	while (i <= mid && j <= hi)
+	{
+		temp[k++] = arr[i] <= arr[j] ? arr[i++] : arr[j++];
+	}
+	while (i <= mid)
+	{
+		temp[k++] = arr[i++];
+	}
+	while (j <= hi)
+	{
+		temp[k++] = arr[j++];
+	}
+	for (int p = 0; p < k; ++p)
+	{
+		arr[lo + p] = temp[p];
+	}
+}
+//快速选择算法
+void quickselect(std::vector<int>& nums, int k,int left,int right)
+{
+	if(left >= right) return;
+
+	// 选择 pivot（使用三数取中法更稳定）
+	int mid = left + (right - left) / 2;
+	std::swap(nums[mid], nums[right]);  // 将 pivot 移到末尾
+
+	int pivot = nums[right];
+	int i = left;
+
+	// 分区操作
+	for (int j = left; j < right; ++j) {
+		if (nums[j] <= pivot) {
+			std::swap(nums[i], nums[j]);
+			++i;
+		}
+	}
+	std::swap(nums[i], nums[right]);  // pivot 归位
+
+	// 递归查找
+	if (k < i) {
+		quickselect(nums, k, left, i - 1);
+	}
+	else if (k > i) {
+		quickselect(nums, k, i + 1, right);
+	}
+	// k == i 时已经找到，直接返回
+}
