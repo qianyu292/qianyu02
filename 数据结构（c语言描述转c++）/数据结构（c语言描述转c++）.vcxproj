@@ -128,6 +128,7 @@
     <ClCompile Include="BinomialQueue.cpp" />
     <ClCompile Include="danlianbiao(lazydelete).cpp" />
     <ClCompile Include="danlianbiao.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="Hashmap.cpp" />
     <ClCompile Include="HashMap2.cpp" />
     <ClCompile Include="Left Heap.cpp" />
