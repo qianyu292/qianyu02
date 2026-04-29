@@ -10,7 +10,7 @@ using namespace std;
 class Graph {
 public:
     int V;  // 顶点数量
-    vector<list<int>> adj;  // 邻接表
+    vector<vector<int>> adj;  // 邻接表
 
 public:
     // 构造函数
@@ -105,4 +105,74 @@ void traverse(Graph G, int s)
     }
     postorder.push_back(s);
     visited[s] = false;
+}
+//无权最短路径:BFS遍历用step记录即可
+int BFS(Graph G,int start,int target,int size)
+{
+    queue<int>q;
+    vector<bool>visited(size);
+    q.push(start);
+    visited[start] = true;
+    int step = 0;
+    while (!q.empty())
+    {
+        int sz = q.size();
+        for (int i = 0; i < sz; ++i)
+        {
+            int cur = q.front(); q.pop();
+            if (cur == target)
+            {
+                return step;
+            }
+            for (auto neighbor : G.adj[cur])
+            {
+                if (!visited[neighbor])
+                {
+                    q.push(neighbor);
+                    visited[neighbor] = true;
+                }
+            }
+        }
+        step++;
+    }
+    return -1;
+}
+//单源加权最短路径算法：Dijkstra算法
+//本质BFS加贪心
+vector<int>Dijkstra(WeightedGraph G,int start,int size)
+{
+    auto cmp = [](pair<int, int>& a, pair<int, int>& b)
+        {
+            return a.second > b.second;
+        };
+    priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)>pq(cmp);
+    pq.push({start,0});
+    vector<int>res(size);
+    res[start] = 0;
+    while (!pq.empty())
+    {
+        int sz = pq.size();
+        for (int i = 0; i < sz; ++i)
+        {
+            pair<int, int>cur = pq.top();
+            pq.pop();
+            int curnode = cur.first;
+            int curvalue = cur.second;
+            if (res[curnode] < curvalue)
+            {
+                continue;
+            }
+            for (auto neighbor : G.adj[curnode])
+            {
+                int nextnode = neighbor.first;
+                int nextvalue = neighbor.second;
+                if (curvalue+nextvalue<res[nextnode])
+                {
+                    res[nextnode] = curvalue + nextvalue;
+                    pq.push({ nextnode,curvalue + nextvalue });
+                }
+            }
+        }
+    }
+    return res;
 }
