@@ -38,7 +38,7 @@ class WeightedGraph {
 public:
     int V;
     // 使用pair存储邻接点和权重
-    vector<list<pair<int, int>>> adj;  // pair<顶点, 权重>
+    vector<vector<pair<int, int>>> adj;  // pair<顶点, 权重>
 
 public:
     WeightedGraph(int vertices) : V(vertices) {
@@ -175,4 +175,121 @@ vector<int>Dijkstra(WeightedGraph G,int start,int size)
         }
     }
     return res;
+}
+//prim算法
+
+int prim(WeightedGraph& G,int size,int start)
+{
+    int weightsum = 0;
+
+    vector<bool>visited(size, false);
+
+    auto cmp = [](pair<int, int>& a, pair<int, int>& b)
+        {
+            return a.second > b.second;
+        };
+    priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)>pq(cmp);
+    pq.emplace( start,0 );
+    while (!pq.empty())
+    {
+        pair<int, int>cur = pq.top();
+        pq.pop();
+        int curNode = cur.first;
+        int curWeight = cur.second;
+        if (visited[curNode])
+        {
+            continue;
+        }
+        weightsum += curWeight;
+        visited[curNode] = true;
+        for (pair<int,int>neighbor : G.adj[curNode])
+        {
+            int nextNode = neighbor.first;
+            int nextWeighted = neighbor.second;
+            if (visited[nextNode])
+            {
+                continue;
+            }
+            pq.emplace(nextNode, nextWeighted);
+        }
+    }
+    for (int i = 0; i < (int)visited.size(); i++) {
+        if (!visited[i]) {
+            return -1;
+        }
+    }
+
+    return weightsum;
+}
+//kruskal算法
+class UF {
+private:
+    // 连通分量个数
+    int _count;
+    // 存储每个节点的父节点
+    vector<int> parent;
+
+public:
+    // n 为图中节点的个数
+    UF(int n) {
+        this->_count = n;
+        this->parent.resize(n);
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    // 将节点 p 和节点 q 连通
+    void union_(int p, int q) {
+        int rootP = find(p);
+        int rootQ = find(q);
+
+        if (rootP == rootQ)
+            return;
+
+        parent[rootQ] = rootP;
+        // 两个连通分量合并成一个连通分量
+        _count--;
+    }
+
+    // 判断节点 p 和节点 q 是否连通
+    bool connected(int p, int q) {
+        int rootP = find(p);
+        int rootQ = find(q);
+        return rootP == rootQ;
+    }
+
+    int find(int x) {
+        if (parent[x] != x) {
+            parent[x] = find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    // 返回图中的连通分量个数
+    int count() {
+        return _count;
+    }
+};
+int kruskal(int n,vector<vector<int>>&connections)
+{
+    UF uf(n);
+    sort(connections.begin(), connections.end(), [](vector<int>& a, vector<int>& b)
+        {
+            return a[1] < b[1];
+        });
+    int mst = 0;
+        for (vector<int>connection : connections)
+        {
+            int from = connection[0];
+            int to = connection[1];
+            int val = connection[2];
+            if (uf.connected(from, to))
+            {
+                continue;
+            }
+            mst += val;
+            uf.union_(from, to);
+        }
+        return uf.count() > 1 ? 0 : mst;
 }

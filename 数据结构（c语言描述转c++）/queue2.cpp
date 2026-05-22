@@ -22,6 +22,41 @@ public:
 		q->capacity = MaxCapacity;
 		q->Array = new E[MaxCapacity];
 	}
+	Queue(const Queue<E>& q1)
+	{
+		q = new QueueNode<E>();
+
+		this->q->size = q1->q->size;
+		this->q->Front = q1->q->Front;
+		this->q->Rear = q1->q->Rear;
+		this->q->capacity = q1->q->capacity;
+
+		q->Array = new E[q->capacity];
+		for (int i = 0; i < q->capacity; i++) {
+			q->Array[i] = q1.q->Array[i];
+		}
+	}
+	Queue<E>& operator=(const Queue<E>& q1)
+	{
+		if (this == &q1) return *this;  // 防止自赋值
+
+		// 释放旧资源
+		delete[] q->Array;
+
+		// 复制新数据
+		q->size = q1.q->size;
+		q->Front = q1.q->Front;
+		q->Rear = q1.q->Rear;
+		q->capacity = q1.q->capacity;
+
+		// 深拷贝数组
+		q->Array = new E[q->capacity];
+		for (int i = 0; i < q->capacity; i++) {
+			q->Array[i] = q1.q->Array[i];
+		}
+
+		return *this;
+	}
 	~Queue()
 	{
 		MakeEmpty();

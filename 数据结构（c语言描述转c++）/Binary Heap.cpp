@@ -34,7 +34,50 @@ public:
     {
         table = new Heapstruct<E>(InitCapacity);
     }
+    PriorityQueue(const PriorityQueue& other)
+    {
+        if (other.table == nullptr)
+        {
+            table = nullptr;
+            return;
+        }
+        // 创建新的 Heapstruct 对象
+        table = new Heapstruct<E>(other.table->capacity);
+        table->size = other.table->size;
+        // 复制元素数组
+        for (int i = 1; i <= table->size; ++i)
+        {
+            table->Elements[i] = other.table->Elements[i];
+        }
+    }
 
+    // 重载赋值运算符
+    PriorityQueue& operator=(const PriorityQueue& other)
+    {
+        if (this == &other)
+        {
+            return *this; // 自赋值检查
+        }
+
+        // 释放当前资源
+        delete table;
+
+        // 复制 other 的资源
+        if (other.table == nullptr)
+        {
+            table = nullptr;
+        }
+        else
+        {
+            table = new Heapstruct<E>(other.table->capacity);
+            table->size = other.table->size;
+            for (int i = 1; i <= table->size; ++i)
+            {
+                table->Elements[i] = other.table->Elements[i];
+            }
+        }
+        return *this;
+    }
     ~PriorityQueue()
     {
         MakeEmpty();
@@ -145,20 +188,20 @@ private:
     }
     void swap(int i, int j)
     {
-        swap(heap[i], heap[j]);
+        std::swap(heap[i], heap[j]);
     }
     void resize(int newsize)
     {
-        if (newsize > size)
+        if (newsize > (int)heap.size)
         {
             heap.resize(newsize);
         }
     }
     void swim(int node)
     {
-        while (node > 0 && comparator(heap[parent[node]], heap[node]))
+        while (node > 0 && comparator(heap[parent(node)], heap[node]))
         {
-            swap(parent[node], node);
+            swap(parent(node), node);
             node = parent[node];
         }
     }

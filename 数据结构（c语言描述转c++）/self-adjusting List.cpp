@@ -7,6 +7,7 @@ private:
 	int capacity;
 public:
 	selfAdjustingArray(int cap = 100) :capacity(cap) {};
+
 	bool find(int x)
 	{
 		for (size_t i = 0; i < data.size(); ++i)

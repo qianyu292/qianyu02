@@ -3,7 +3,8 @@ struct Node
 {
     E val;
     Node* next; 
-    Node* prev;  // 新增前驱指针
+    Node* prev;
+    Node(E val) :val(val), next(nullptr), prev(nullptr) {}// 新增前驱指针
 };
 template<typename E>
 class List
@@ -23,7 +24,46 @@ public:
         Tail->prev = Head;
         Tail->next = nullptr; 
     }
+    List(const List<E>& other)
+    {
+        // 初始化头尾哨兵节点
+        Head = new Node<E>();
+        Tail = new Node<E>();
+        Head->next = Tail;
+        Head->prev = nullptr;
+        Tail->prev = Head;
+        Tail->next = nullptr;
 
+        // 复制其他链表的所有节点
+        Node<E>* current = other.First();
+        while (current != nullptr)
+        {
+            insertBack(current->val);
+            current = other.Advance(current);
+        }
+    }
+
+    // 重载赋值运算符
+    List<E>& operator=(const List<E>& other)
+    {
+        if (this == &other)
+        {
+            return *this;  // 防止自赋值
+        }
+
+        // 清空当前链表
+        MakeEmpty();
+
+        // 复制其他链表的所有节点
+        Node<E>* current = other.First();
+        while (current != nullptr)
+        {
+            insertBack(current->val);
+            current = other.Advance(current);
+        }
+
+        return *this;
+    }
     // 析构函数
     ~List()
     {

@@ -50,6 +50,35 @@ private:
 	TreeNode<E>* root;
 public:
 	SearchTree():root(nullptr){}
+	SearchTree(const SearchTree<E>& other)
+		: root(nullptr)
+	{
+		if (other.root != nullptr)
+		{
+			root = CopyTree(other.root);
+		}
+	}
+
+	// 重载赋值运算符
+	SearchTree<E>& operator=(const SearchTree<E>& other)
+	{
+		if (this == &other)
+		{
+			return *this;  // 防止自赋值
+		}
+
+		// 清空当前树
+		MakeEmpty(root);
+		root = nullptr;
+
+		// 复制其他树
+		if (other.root != nullptr)
+		{
+			root = CopyTree(other.root);
+		}
+
+		return *this;
+	}
 	~SearchTree()
 	{
 		MakeEmpty(root);
@@ -253,5 +282,18 @@ public:
 		}
 		return (flipEquiv(root1->left, root2->left) && flipEquiv(root1->right, root2->right))
 			|| (flipEquiv(root1->right, root2->left) && flipEquiv(root1->left, root2->right));
+	}
+	TreeNode<E>* CopyTree(TreeNode<E>* source)
+	{
+		if (source == nullptr)
+		{
+			return nullptr;
+		}
+
+		TreeNode<E>* newNode = new TreeNode<E>(source->val);
+		newNode->left = CopyTree(source->left);
+		newNode->right = CopyTree(source->right);
+
+		return newNode;
 	}
 };

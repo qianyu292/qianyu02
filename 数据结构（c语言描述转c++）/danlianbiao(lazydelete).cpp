@@ -25,7 +25,57 @@ public:
     List() {
         Head = new Node<E>();
     }
+    List(const List<E>& list)
+    {
+        Head = new Node<E>();  // 头结点
+        Head->next = nullptr;
 
+        Node<E>* src = list.Head->next;  // 源链表第一个实际节点
+        Node<E>* dst = Head;              // 目标链表尾部
+
+        while (src != nullptr)
+        {
+            Node<E>* copy = new Node<E>(src->val);
+            copy->deleted = src->deleted;
+            copy->next = nullptr;
+
+            dst->next = copy;
+            dst = copy;
+            src = src->next;
+        }
+    }
+
+    // 赋值运算符
+    List<E>& operator=(const List<E>& list)
+    {
+        if (this != &list)
+        {
+            // 清空现有节点
+            Node<E>* p = Head->next;
+            while (p != nullptr)
+            {
+                Node<E>* temp = p;
+                p = p->next;
+                delete temp;
+            }
+            Head->next = nullptr;
+
+            // 深拷贝
+            Node<E>* src = list.Head->next;
+            Node<E>* dst = Head;
+            while (src != nullptr)
+            {
+                Node<E>* copy = new Node<E>(src->val);
+                copy->deleted = src->deleted;
+                copy->next = nullptr;
+
+                dst->next = copy;
+                dst = copy;
+                src = src->next;
+            }
+        }
+        return *this;
+    }
     // 【新增】析构函数，确保内存不泄露
     ~List() {
         MakeEmpty(Head);

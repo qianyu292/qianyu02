@@ -12,6 +12,70 @@ private:
 	Node<E>* Head;
 	//下面的L即head。
 public:
+	List() :Head(nullptr) {};
+	List(const List<E>& list)
+	{
+		// 1. 创建新头结点
+		Head = new Node<E>();
+		Head->next = nullptr;
+
+		// 2. 遍历原链表，逐个复制节点
+		Node<E>* current = list.Head->next;  // 原链表第一个实际节点
+		Node<E>* tail = Head;                 // 新链表的尾部节点
+
+		while (current != nullptr)
+		{
+			// 创建新节点，完整复制所有数据
+			Node<E>* newNode = new Node<E>(current->val);
+			newNode->deleted = current->deleted;  // 复制懒惰删除标记
+			newNode->next = nullptr;
+
+			// 链接到新链表尾部
+			tail->next = newNode;
+			tail = newNode;  // 更新尾部指针
+
+			// 移动到原链表下一个节点
+			current = current->next;
+		}
+	}
+
+	// 赋值运算符
+	List<E>& operator=(const List<E>& list)
+	{
+		if (this == &list) return *this;  // 防止自赋值
+
+		// 1. 清空当前链表的所有节点
+		Node<E>* p = Head->next;
+		while (p != nullptr)
+		{
+			Node<E>* temp = p;
+			p = p->next;
+			delete temp;
+		}
+		Head->next = nullptr;
+
+		// 2. 深拷贝原链表
+		Node<E>* current = list.Head->next;
+		Node<E>* tail = Head;
+
+		while (current != nullptr)
+		{
+			Node<E>* newNode = new Node<E>(current->val);
+			newNode->deleted = current->deleted;
+			newNode->next = nullptr;
+
+			tail->next = newNode;
+			tail = newNode;
+			current = current->next;
+		}
+
+		return *this;
+	}
+	~List()
+	{
+		delete Head;
+		this->Head = nullptr;
+	}
 	Node<E>* MakeEmpty(Node<E>* L);
 	bool isEmpty(Node<E>* L)
 	{
