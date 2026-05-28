@@ -123,7 +123,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AvlTree(lazyDelete).cpp" />
     <ClCompile Include="AvlTree.cpp" />
+    <ClCompile Include="AvlTree2.cpp" />
     <ClCompile Include="Binary Heap.cpp" />
     <ClCompile Include="BinomialQueue.cpp" />
     <ClCompile Include="danlianbiao(lazydelete).cpp" />
@@ -134,6 +136,7 @@
     <ClCompile Include="Left Heap.cpp" />
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="queue2.cpp" />
+    <ClCompile Include="RedBlackTree.cpp" />
     <ClCompile Include="Searchtree.cpp" />
     <ClCompile Include="self-adjusting List.cpp" />
     <ClCompile Include="shuanglianbiao.cpp" />

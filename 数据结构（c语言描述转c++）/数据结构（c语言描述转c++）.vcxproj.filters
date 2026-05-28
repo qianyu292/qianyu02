@@ -75,5 +75,14 @@
     <ClCompile Include="Graph.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="AvlTree2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="AvlTree(lazyDelete).cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RedBlackTree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
