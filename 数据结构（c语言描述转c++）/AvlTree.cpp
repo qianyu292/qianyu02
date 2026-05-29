@@ -1,4 +1,6 @@
 //自平衡的二叉搜索树
+#include<iostream>
+#include<algorithm>
 template<typename E>
 struct AvlNode
 {
@@ -80,20 +82,21 @@ private:
 	{
 		if (!node)return nullptr;
 
+		updateHeight(node);
 		int balance = balanced(node);
 		if (balance > 1 && balanced(node->left) >= 0)
 		{
 			node=RotateRight(node);
 		}
-		if(balance>1&&balanced(node->left)<0)
+		else if(balance>1&&balanced(node->left)<0)
 		{
 			node=RotateLeftRight(node);
 		}
-		if (balance < -1 && balanced(node->right) <= 0)
+		else if (balance < -1 && balanced(node->right) <= 0)
 		{
 			node=RotateLeft(node);
 		}
-		if (balance < -1 && balanced(node->right)>0)
+		else if (balance < -1 && balanced(node->right)>0)
 		{
 			node=RotateRightLeft(node);
 		}
@@ -129,68 +132,67 @@ private:
 	}
 	AvlNode<E>* Insert(E x, AvlNode<E>* node)
 	{
-		/*
-	* Insert思路：
-	* 1. 递归终止条件：如果当前节点为空，在此位置创建新节点并返回
-	*   
-	*
-	* 2. 递归插入：
-	*    - 如果 x < node->val，递归插入左子树
-	*    - 如果 x > node->val，递归插入右子树：
-	*    - 如果 x == node->val，根据需求决定：直接返回node（不允许重复）或插入右子树
-	*
-	* 3. 更新高度：
-	*    updateHeight(node);  
-	*
-	* 4. 平衡调整：
-	*    
-	*
-	* 5. 返回当前子树的新根节点
-	*    
-	*
-	* 注意：由于插入只会让树高度增加1，最多只需一次旋转即可恢复平衡
-	*/
+		if (node == nullptr)
+		{
+			return new AvlNode<E>(x);
+		}
+		if (node->val < x)
+		{
+			node->right = Insert(x, node->right);
+		}
+		else if (node->val > x)
+		{
+			node->left = Insert(x, node->left);
+		}
+		else
+		{
+			std::cout << "已有节点" << std::endl;
+			return node;
+		}
+		return Rebalanced(node);
 	}
 	AvlNode<E>* Delete(E x, AvlNode<E>* node)
 	{
-		/*
-	 * Delete思路：
-	 * 1. 递归终止条件：如果当前节点为空，说明没找到，直接返回nullptr
-	 *    
-	 *
-	 * 2. 查找要删除的节点：
-	 *    - 如果 x < node->val，去左子树删除：
-	 *    - 如果 x > node->val，去右子树删除：
-	 *    - 如果 x == node->val，找到目标，执行删除操作（见步骤3）
-	 *
-	 * 3. 删除节点的三种情况：
-	 *    【情况A：叶子节点（左右都为空）】
-	 *      直接删除：
-	 *
-	 *    【情况B：只有一个子节点】
-	 *      用子节点替换当前节点：
-	 *      
-	 *
-	 *    【情况C：有两个子节点】
-	 *      方案（用后继节点替换）：
-	 *        - 找到右子树的最小节点：
-	 *        - 将minNode的值复制到当前节点：
-	 *        - 递归删除右子树中的minNode：
-	 *  
-	 *
-	 * 4. 如果节点被删除了（node变为nullptr），直接返回nullptr
-	 *    
-	 *
-	 * 5. 更新高度：
-	 *   
-	 *
-	 * 6. 平衡调整：
-	 *  
-	 *    （注意：删除可能导致多次旋转，因为删除可能让树高度减少，影响祖先节点的平衡）
-	 *
-	 * 7. 返回当前子树的新根节点
-	 *    return node;
-	 */
+		if (node == nullptr)
+		{
+			return nullptr;
+		}
+		if (node->val < x)
+		{
+			node->right = Delete(x,node->right);
+		}
+		else if (node->val > x)
+		{
+			node->left = Delete(x,node->left);
+		}
+		else
+		{
+			AvlNode<E>* temp = nullptr;
+			if (!node->left && !node->right) {
+				delete node;
+				return nullptr;
+			}
+			else if (!node->left) {
+				temp = node->right;
+				delete node;
+				return temp;
+			}
+			else if (!node->right) {
+				temp = node->left;
+				delete node;
+				return temp;
+			}
+			else {
+				// 双孩子情况
+				AvlNode<E>* T2 = FindMin(node->right);
+				node->val = T2->val;
+				node->right = Delete(T2->val, node->right);
+			}
+		}
+		updateHeight(node);
+
+		node=Rebalanced(node);
+		return node;
 	}
 	//返回值
 public:
@@ -199,6 +201,7 @@ public:
 	{
 		MakeEmpty();
 	}
+	void MakeEmpty() { MakeEmpty(root); }
 	AvlNode<E>* Find(E x) { return Find(x, root); }
 	AvlNode<E>* FindMin() { return FindMin(root); }
 	AvlNode<E>* FindMax() { return FindMax(root); }
