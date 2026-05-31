@@ -136,6 +136,7 @@
     <ClCompile Include="Left Heap.cpp" />
     <ClCompile Include="queue.cpp" />
     <ClCompile Include="queue2.cpp" />
+    <ClCompile Include="RBTree.cpp" />
     <ClCompile Include="RedBlackTree.cpp" />
     <ClCompile Include="Searchtree.cpp" />
     <ClCompile Include="self-adjusting List.cpp" />
