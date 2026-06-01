@@ -24,28 +24,73 @@ private:
 	void InitNIL()
 	{
 		NIL = new RBNode<T>(T(), BLACK);
-		NIL->left = NIL;    // 应该指向自己，形成自环
-		NIL->right = NIL;   // 应该指向自己，形成自环
+		NIL->left = NIL;
+		NIL->right = NIL;
 		NIL->parent = nullptr;
 		root = NIL;
 	}
 	int Height(RBNode<T>* node)
 	{
-		
+		return node?node->height:-1;
 	}
 	void updateHeight(RBNode<T>* node)
 	{
-		
+		if (!node)return;
+		node->height = 1 + max(Height(node->left), Height(node->right));
 	}
 	//左旋
 	void leftRotate(RBNode<T>* x)
 	{
-		
+		RBNode<T>* y = x->right;
+		x->right = y->left;
+		if (y->left != NIL)
+		{
+			y->left->parent = x;
+		}
+		y->parent = x->parent;
+		if (x->parent == nullptr)
+		{
+			root = y;
+		}
+		else if (x->parent->left == x)
+		{
+			x->parent->left = y;
+		}
+		else
+		{
+			x->parent->right = y;
+		}
+		y->left = x;
+		x->parent = y;
+		updateHeight(x);
+		updateHeight(y);
 	}
 	//右旋
 	void rightRotate(RBNode<T>* x)
 	{
-		
+		RBNode<T>* y = x->left;
+		x->left = y->right;
+		if (y->right != NIL)
+		{
+			y->right->parent = x;
+		}
+		y->parent = x->parent;
+		if (x->parent == nullptr)
+		{
+			root = y;
+		}
+		else if (x->parent->left == x)
+		{
+			x->parent->left = y;
+		}
+		else
+		{
+			x->parent->right = y;
+		}
+		y->right = x;
+		x->parent = y;
+		updateHeight(x);
+		updateHeight(y);
 	}
 	//插入修复
 	void InsertFixup(RBNode<T>* z)
@@ -62,12 +107,26 @@ private:
 	//删除最小节点的辅助函数:用v替换u
 	void transplant(RBNode<T>* u, RBNode<T>* v)
 	{
-		
+		if (u->parent == nullptr)
+		{
+			root = v;
+		}
+		else if (u->parent->left == u)
+		{
+			u->parent->left = v;
+		}
+		else
+		{
+			u->parent->right = v;
+		}
+		v->parent = u->parent;
 	}
 	//查找最小节点
 	RBNode<T>* minimum(RBNode<T>* node)
 	{
-
+		if (node == NIL)return nullptr;
+		if (node->left == NIL)return node;
+		return minimum(node->left);
 	}
 	//删除修复
 	void deleteFixup(RBNode<T>* x)
@@ -86,17 +145,63 @@ private:
 	}
 	void destroyTree(RBNode<T>* node)
 	{
-		
+		if (node != NIL)
+		{
+			destroyTree(node->left);
+			destroyTree(node->right);
+			delete node;
+			node = nullptr;
+		}
 	}
 	void printTree(RBNode<T>* node, int level, string prefix)
 	{
-		
+		if (node != NIL)
+		{
+			printTree(node->right, level + 1, "/");
+
+			for (int i = 0; i < level; ++i)cout << "   ";
+			cout << prefix << node->key << "(" << (node->color == RED ? "R" : "B") << ")" << endl;
+
+			printTree(node->left, level + 1, "\\");
+		}
+	}
+	bool varifyProperties(RBNode<T>* node, int blackcount, int& pathBlackHeight)
+	{
+		if (node == NIL)//如果节点为叶子节点
+		{
+			if (pathBlackHeight == -1)//看是否符合黑路同
+			{
+				pathBlackHeight = blackcount;
+				return true;
+			}
+			else if (blackcount != pathBlackHeight)//看是否符合黑路同
+			{
+				return false;
+			}
+		}
+		if (node->color == RED)//如果节点为红色
+		{
+			if (node->left != NIL && node->left->color == RED)//看是否违反不红红
+			{
+				return false;
+			}
+			if (node->right != NIL && node->right->color == RED)
+			{
+				return false;
+			}
+		}
+		if (node->color == BLACK)
+		{
+			blackcount++;//节点黑色
+		}
+		return varifyProperties(node->left, blackcount, pathBlackHeight) &&
+			varifyProperties(node->right, blackcount, pathBlackHeight);
 	}
 public:
-	RedBlackTree() {  }
+	RedBlackTree() : {InitNIL(); }
 	~RedBlackTree()
 	{
-		
+		destroyTree(root);
 	}
 
 	void Insert(T key)
@@ -110,24 +215,66 @@ public:
 	}
 	RBNode<T>* search(T key)
 	{
-		
+		if (root == NIL)return nullptr;
+		RBNode<T>* x = root;
+		while (x->key != key)
+		{
+			if (x->key < key)
+			{
+				x = x->right;
+			}
+			else if(x->key > key)
+			{
+				x = x->left;
+			}
+		}
+		if (x == NIL)return nullptr;
+		return x;
 	}
 	void levelOrder()
 	{
-		
+		if (root == NIL)return;
+		queue<RBNode<T>*>q;
+		q.push(root);
+		int level = 0;
+		while (!q.empty())
+		{
+			int sz = q.size();
+			cout << "this is" << level << "level" << endl;
+			for (int i = 0; i < sz; ++i)
+			{
+				RBNode<T>* node = q.front();
+				q.pop();
+				cout << node->key << " " << (node->color == RED ? "R" : "B");
+				if (node->left != NIL)
+				{
+					q.push(node->left);
+				}
+				if (node->right != NIL)
+				{
+					q.push(node->right);
+				}
+			}
+			cout << endl;
+			level++;
+		}
 	}
 	void print()
 	{
-		
+		return printTree(root, 0, "");
 	}
 	//验证红黑树性质
 	bool varify()
 	{
-		
-	}
-private:
-	bool varifyProperties(RBNode<T>* node, int blackcount, int& pathBlackHeight)
-	{
-		
+
+		if (root == NIL)return true;
+
+		if (root->color != BLACK)
+		{
+			cout << "Root is BLACK" << endl;
+			return false;
+		}
+		int blackHeight = -1;
+		return varifyProperties(root, 0, blackHeight);
 	}
 };
