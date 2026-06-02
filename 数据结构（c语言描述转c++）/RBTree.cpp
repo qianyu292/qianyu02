@@ -206,12 +206,86 @@ public:
 
 	void Insert(T key)
 	{
-		
+		RBNode<T>* z = new RBNode<T>(key, RED);
+		z->left = z->right = NIL;
+		RBNode<T>* y = NIL;//y是要插入的点的父亲
+		RBNode<T>* x = root;
+		while (x != NIL)//找到插入点的父亲
+		{
+			y = x;
+			if (x->key < key)
+			{
+				x = x->right;
+			}
+			else if (x->key > key)
+			{
+				x = x->left;
+			}
+		}
+		z->parent = y;
+		if(y==NIL)
+		{
+			root = z;
+		}
+		if (y->key > z->key)
+		{
+			y->left = z;
+		}
+		else if (y->key < z->key)
+		{
+			y->right = key;
+		}
+		if (z->parent == NIL)
+		{
+			z->color = BLACK;
+			return;
+		}
+		InsertFixup(z);
 	}
 	
 	void remove(T key)
 	{
-		
+		RBNode<T>* z = search(z);
+		if (z == nullptr)return;
+
+		RBNode<T>* y = z;//y指向实际要删除的节点
+		RBNode<T>* x;//节点x指向替换y的节点
+		Color y_original_color = y->color;//记录y的原始颜色
+		if (z->left == NIL)
+		{
+			x = z->right;
+			transplant(z, z->right);
+		}
+		else if (z->right = NIL)
+		{
+			x = z->left;
+			transplant(z, z->left);
+		}
+		else
+		{
+			y = minimum(z->right);
+			y_original_color = y->color;
+			x = y->right;
+			if (y->parent == z)
+			{
+				x->parent = y;
+			}
+			else
+			{
+				transplant(y, y->right);//用y的右子节点替换y
+				y->right = z->right;//让y接替z的右子树
+				y->right->parent = y;
+			}
+			transplant(z, y);
+			y->left = z->left;//让y接替z的右子树
+			y->left->parent = y;
+			y->color = z->color;//y继承z的颜色
+		}
+		delete z;
+		if (y_original_color == BLACK)
+		{
+			deleteFixup(x);
+		}
 	}
 	RBNode<T>* search(T key)
 	{
