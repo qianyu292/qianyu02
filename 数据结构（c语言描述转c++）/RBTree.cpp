@@ -1,6 +1,7 @@
 //手写红黑树
 #include<cassert>
 #include<queue>
+#include<algorithm>
 #include<iostream>
 using namespace std;
 enum Color { RED, BLACK };
@@ -102,7 +103,70 @@ private:
 		* case2:如果叔叔是黑色：要根据LL，RR，LR，RL进行旋转，再对旋转中心点和被旋转点进行变色
 		* 同时可以用对称来简化思路和实现
 		*/
-
+		while (z->parent != NIL && z->parent->color==RED)
+		{
+			RBNode<T>* x = z->parent, y = z->parent->parent;
+			if (y!=NIL&&y->left==x)
+			{
+				if (y->right!=NIL&&y->right->color == RED)
+				{
+					x->color = BLACK;
+					y->color = RED;
+					y->right->color = BLACK;
+					z = y;
+				}
+				else if (y->right->color == BLACK)
+				{
+					if (x->left == z)
+					{
+						rightRotate(y);
+						y->color = RED;
+						x->color = BLACK;
+						z = x;
+					}
+					else if(x->right==z)
+					{
+						leftRotate(x);
+						rightRotate(y);
+						y->color = RED;
+						z->color = BLACK;
+						z = z->parent;
+					}
+				}
+			}
+			else
+			{
+				if (y != NIL && y->right == x)
+				{
+					if (y->left!=NIL&&y->left->color == RED)
+					{
+						y->color = RED;
+						x->color = BLACK;
+						y->left->color = BLACK;
+						z = y;
+					}
+					else if (y->left->color == BLACK)
+					{
+						if (x->right == z)
+						{
+							leftRotate(y);
+							y->color = RED;
+							x->color = BLACK;
+							z = x;
+						}
+						else
+						{
+							rightRotate(x);
+							leftRotate(y);
+							y->color = RED;
+							z->color = BLACK;
+							z = z->parent;
+						}
+					}
+				}
+			}
+		}
+		root->color = BLACK;
 	}
 	//删除最小节点的辅助函数:用v替换u
 	void transplant(RBNode<T>* u, RBNode<T>* v)
@@ -142,6 +206,87 @@ private:
 		*                [2]兄弟孩子全是黑色：兄弟变红，双黑上移:if(为黑):再递归进行删除修复else if（红节点）直接变单黑
 		* (2)兄弟是红色：兄父变色，朝双黑旋转（保持双黑继续修复）
 		*/
+		while (x != root && x->color == BLACK)
+		{
+			RBNode<T>* y = x->parent;
+			if (y->left == x)
+			{
+				RBNode<T>* z = y->right;
+				if (z->color == RED)
+				{
+					z->color = BLACK;
+					y->color = RED;
+					leftRotate(y);
+					z = y->right;
+				}
+				else if (z->color == BLACK)
+				{
+					if (z->left->color == BLACK && z->right->color == BLACK)
+					{
+						z->color = RED;
+						x = y;
+						if (x->color == RED)
+						{
+							x->color = BLACK;
+						}
+					}
+					else
+					{
+						if (z->right->color == BLACK)
+						{
+							z->left->color = BLACK;
+							z->color = RED;
+							rightRotate(z);
+							z = x->parent->right;
+						}
+						z->right->color = z->color;
+						z->color = y->color;
+						y->color = BLACK;
+						leftRotate(y);
+						x = z;
+					}
+				}
+			}
+			else if(y->right==x)
+			{
+				RBNode<T>* z = y->left;
+				if (z->color == RED)
+				{
+					z->color = BLACK;
+					y->color = RED;
+					rightRotate(y);
+					z = y->left;
+				}
+				else if (z->color == BLACK)
+				{
+					if (z->left->color == BLACK && z->right->color == BLACK)
+					{
+						z->color = RED;
+						x = y;
+						if (x->color == RED)
+						{
+							x->color = BLACK;
+						}
+					}
+					else
+					{
+						if (z->left->color == BLACK)
+						{
+							z->left->color = BLACK;
+							z->color = RED;
+							leftRotate(z);
+							z = x->parent->left;
+						}
+						z->left->color = z->color;
+						z->color = y->color;
+						y->color = BLACK;
+						rightRotate(y);
+						x = z;
+					}
+				}
+			}
+		}
+		x->color = BLACK;
 	}
 	void destroyTree(RBNode<T>* node)
 	{
@@ -198,7 +343,7 @@ private:
 			varifyProperties(node->right, blackcount, pathBlackHeight);
 	}
 public:
-	RedBlackTree() : {InitNIL(); }
+	RedBlackTree() {InitNIL(); }
 	~RedBlackTree()
 	{
 		destroyTree(root);
@@ -221,6 +366,11 @@ public:
 			{
 				x = x->left;
 			}
+			else
+			{
+				delete z;
+				return;
+			}
 		}
 		z->parent = y;
 		if(y==NIL)
@@ -233,7 +383,7 @@ public:
 		}
 		else if (y->key < z->key)
 		{
-			y->right = key;
+			y->right = z;
 		}
 		if (z->parent == NIL)
 		{
@@ -245,8 +395,8 @@ public:
 	
 	void remove(T key)
 	{
-		RBNode<T>* z = search(z);
-		if (z == nullptr)return;
+		RBNode<T>* z = search(key);
+		if (z == NIL)return;
 
 		RBNode<T>* y = z;//y指向实际要删除的节点
 		RBNode<T>* x;//节点x指向替换y的节点
@@ -255,11 +405,20 @@ public:
 		{
 			x = z->right;
 			transplant(z, z->right);
+			if (z->color == BLACK)
+			{
+				x->color = BLACK;
+			}
+			
 		}
-		else if (z->right = NIL)
+		else if (z->right == NIL)
 		{
 			x = z->left;
 			transplant(z, z->left);
+			if (z->color == BLACK)
+			{
+				x->color = BLACK;
+			}
 		}
 		else
 		{
@@ -291,7 +450,7 @@ public:
 	{
 		if (root == NIL)return nullptr;
 		RBNode<T>* x = root;
-		while (x->key != key)
+		while (x!=NIL&&x->key != key)
 		{
 			if (x->key < key)
 			{
@@ -302,7 +461,7 @@ public:
 				x = x->left;
 			}
 		}
-		if (x == NIL)return nullptr;
+		if (x == NIL)return NIL;
 		return x;
 	}
 	void levelOrder()

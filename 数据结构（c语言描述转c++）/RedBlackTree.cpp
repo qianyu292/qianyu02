@@ -214,7 +214,7 @@ private:
 				}//兄弟是黑色且兄弟孩子至少有一个红孩子
 				else
 				{
-					//LR型先行处理变成成LL型
+					//RL型先行处理变成成LL型
 					if (w->right->color == BLACK)
 					{
 						w->left->color = BLACK;
@@ -222,7 +222,7 @@ private:
 						rightRotate(w);
 						w = x->parent->right;
 					}
-					//LL型
+					//RR型
 					w->color = x->parent->color;
 					x->parent->color = BLACK;
 					w->right->color = BLACK;
@@ -290,7 +290,7 @@ private:
 		}
 	}
 public:
-	RedBlackTree() { InitNIL(); }
+	RedBlackTree() :{ InitNIL(); }
 	~RedBlackTree()
 	{
 		destroyTree(root);
