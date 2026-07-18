@@ -290,7 +290,7 @@ private:
 		}
 	}
 public:
-	RedBlackTree() :{ InitNIL(); }
+	RedBlackTree() { InitNIL(); }
 	~RedBlackTree()
 	{
 		destroyTree(root);

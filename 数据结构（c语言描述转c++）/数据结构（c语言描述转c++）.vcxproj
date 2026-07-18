@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SegmentTree2.cpp" />
     <ClCompile Include="AvlTree(lazyDelete).cpp" />
     <ClCompile Include="AvlTree.cpp" />
     <ClCompile Include="AvlTree2.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="RBTree.cpp" />
     <ClCompile Include="RedBlackTree.cpp" />
     <ClCompile Include="Searchtree.cpp" />
+    <ClCompile Include="SegmentTree.cpp" />
     <ClCompile Include="self-adjusting List.cpp" />
     <ClCompile Include="shuanglianbiao.cpp" />
     <ClCompile Include="sort.cpp" />
